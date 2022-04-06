@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -125,8 +126,21 @@ class PostDetailsView(HitCountDetailView):
         queryset = super().get_queryset().prefetch_related('like_set', 'comment_set')
         return queryset
 
+    # creates pagination for the comment_set
+    def get_related_comments(self):
+        queryset = self.object.comment_set.all()
+        paginator = Paginator(queryset, 5)
+        page = self.request.GET.get('page')
+        comments = paginator.get_page(page)
+        return comments
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        comments = self.get_related_comments()
+        context['related_comments'] = comments
+        context['page_obj'] = comments
+
         context['is_owner'] = self.object.user == self.request.user
         if self.request.user.is_authenticated:
             context['user_liked'] = self.object.like_set.filter(user=self.request.user) and True or False

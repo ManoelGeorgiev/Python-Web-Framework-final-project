@@ -77,10 +77,11 @@
                 </div>
             </div>
         </div>
-
+        <h5>Comments</h5>
+    <hr>
 {#    comment section      #}
     <div>
-    {% for comment in post.comment_set.all %}
+    {% for comment in related_comments %}
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-4">
@@ -129,7 +130,25 @@
         </div>
     {% endfor %}
 
-
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 mb-3">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+                        {% endif %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
+                        {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-12">

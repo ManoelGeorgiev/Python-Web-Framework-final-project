@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{{form.media}}
+<div class="container bootstrap snippets bootdey">
+    <div class="row">
+            <div class="d-flex mt-3">
+                <h6>
+                    <a class="text-primary" href="{% url 'index' %}">Forum</a> >>
+                    <a class="text-primary" href="{% url 'category view' post.category_id %}">{{ post.category }}</a> >>
+                    <a class="text-primary" href="{% url 'post details' post.pk %}">{{ post.title }}</a> >>
+                    <a class="text-primary" href="{% url 'edit post' post.pk %}">Edit</a>
+                </h6>
+            </div>
+        </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-8 col-md-8 col-md-offset-3">
+            <div class="account-wall">
+                <h5 class="text-center">Edit Post</h5>
+                <form class="form-signin d-grid" action="{% url 'edit post' post.pk %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.media }}
+                    {{ form }}
+
+{#                <input type="text" class="form-control" placeholder="Email" required autofocus>#}
+{#                <input type="password" class="form-control" placeholder="Password" required>#}
+
+                <button class="btn btn-primary p-2 mt-2" type="submit">
+                    Edit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

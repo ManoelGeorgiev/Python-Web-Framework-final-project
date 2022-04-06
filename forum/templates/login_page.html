@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container bootstrap snippets bootdey">
+    <div class="row justify-content-center">
+        <div class="col-sm-6 col-md-4 col-md-offset-4">
+            <div class="account-wall">
+                <img class="profile-img" src="{% static 'logo/forum-logo.png' %}"
+                    alt="">
+                <form class="form-signin d-grid" action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                    {{ form }}
+
+{#                <input type="text" class="form-control" placeholder="Email" required autofocus>#}
+{#                <input type="password" class="form-control" placeholder="Password" required>#}
+
+                <button class="btn btn-primary p-2 mt-2" type="submit">
+                    Sign in</button>
+                </form>
+            </div>
+            <a href="{% url 'register' %}" class="text-center new-account">Create an account </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

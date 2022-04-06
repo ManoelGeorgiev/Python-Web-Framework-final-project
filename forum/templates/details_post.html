@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bleach_tags %}
+{% block content %}
+
+{% csrf_token %}
+    <div class="container">
+        <div class="row">
+            <div class="d-flex mt-3">
+                <h6>
+                    <a class="text-primary" href="{% url 'index' %}">Forum</a> >>
+                    <a class="text-primary" href="{% url 'category view' post.category_id %}">{{ post.category }}</a> >>
+                    <a class="text-primary" href="{% url 'post details' post.pk %}">{{ post.title }}</a>
+                </h6>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="media d-inline-flex align-items-center">
+                            <img src="{{ post.user.profile.picture.url }}" class="d-block ui-w-40 rounded-circle" alt="">
+                            <div class="media-body d-inline-flex ms-2">
+                                <a href="#" data-abc="true">{{ post.user }}
+                            </a>
+                                {% if post.created_on == post.edited_on %}
+                                    <div class="text-muted small ms-2 d-inline-flex">Posted
+                                        on: {{ post.created_on }}</div>
+                                {% else %}
+                                    <div class="text-muted small ms-2 d-inline-flex">Edited
+                                        on: {{ post.edited_on }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="text-muted small ms-2 d-inline-flex">
+                                <div>Member since <strong>{{ post.user.date_joined }}</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {{ post.content|bleach }}
+                    </div>
+                    <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
+                        <div class="px-4 pt-3">
+                            {% if request.user.is_authenticated %}
+                                {% if not is_owner %}
+                                    {% if user_liked %}
+                                        <span>Like: </span>
+                                        <a href="{% url 'like post' post.pk %}"
+                                           class="text-muted d-inline-flex align-items-center align-middle"
+                                           data-abc="true">
+                                            <span class="iconify icon-1x" data-icon="ion:heart"></span>
+                                        </a>
+                                        <span>Total Likes: {{ post.like_set.count }}</span>
+                                    {% else %}
+                                        <span>Like: </span>
+                                        <a href="{% url 'like post' post.pk %}"
+                                           class="text-muted d-inline-flex align-items-center align-middle"
+                                           data-abc="true">
+                                            <span class="iconify icon-1x" data-icon="ion:heart-outline"></span>
+                                        </a>
+                                         <span>Total Likes: {{ post.like_set.count }}</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span>Post: </span>
+                                    <a href="{% url 'edit post' post.pk %}"
+                                       class="btn btn-primary d-inline-flex align-items-center align-middle"
+                                       data-abc="true">Edit
+                                    </a>
+                                    <a href="{% url 'delete post' post.pk %}"
+                                       class="btn btn-danger d-inline-flex align-items-center align-middle"
+                                       data-abc="true">Delete
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{#    comment section      #}
+    <div>
+    {% for comment in post.comment_set.all %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="media d-inline-flex align-items-center">
+                            <img src="{{ comment.user.profile.picture.url }}" class="d-block ui-w-40 rounded-circle"
+                                 alt="">
+                            <div class="media-body d-inline-flex ms-2">
+                                <a href="#" data-abc="true">{{ comment.user }}
+                                </a>
+                                {% if comment.created_on == comment.edited_on %}
+                                    <div class="text-muted small ms-2 d-inline-flex">Posted
+                                        on: {{ comment.created_on }}</div>
+                                {% else %}
+                                    <div class="text-muted small ms-2 d-inline-flex">Edited
+                                        on: {{ comment.edited_on }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="text-muted small ms-2 d-inline-flex">
+                                <div>Member since <strong>{{ comment.user.date_joined }}</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        {{ comment.content|bleach }}
+                    </div>
+                    <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
+                        <div class="px-4 pt-3">
+                            {% if request.user.is_authenticated %}
+                                {% if request.user.id == comment.user.id %}
+                                    <span>Comment: </span>
+                                    <a href="{% url 'edit comment' comment.pk %}"
+                                       class="btn btn-primary d-inline-flex align-items-center align-middle"
+                                       data-abc="true">Edit
+                                    </a>
+                                    <a href="{% url 'delete comment' comment.pk %}"
+                                       class="btn btn-danger d-inline-flex align-items-center align-middle"
+                                       data-abc="true">Delete
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            {% if request.user.is_authenticated %}
+                <a class="btn btn-lg btn-block btn-success rounded-50 py-3 mb-3 roboto-bold d-flex justify-content-center"
+                   href="{% url 'create comment' post.pk %}">
+                    Add a comment
+                </a>
+            {% else %}
+                <h4>You need to be logged in to add a comment!</h4>
+            {% endif %}
+        </div>
+    </div>
+</div>
+    </div>
+
+{% endblock %}
+

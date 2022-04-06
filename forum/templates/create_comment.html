@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container bootstrap snippets bootdey">
+    <div class="row justify-content-center">
+        <div class="col-sm-8 col-md-8 col-md-offset-3">
+            <div class="account-wall">
+                <h5 class="text-center">Create Comment</h5>
+                <form class="form-signin d-grid" action="{% url 'create comment' view.kwargs.pk %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.media}}
+                    {{ form }}
+
+{#                <input type="text" class="form-control" placeholder="Email" required autofocus>#}
+{#                <input type="password" class="form-control" placeholder="Password" required>#}
+
+                <button class="btn btn-primary p-2 mt-2" type="submit">
+                    Post a comment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

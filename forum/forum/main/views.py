@@ -18,6 +18,7 @@ UserModel = get_user_model()
 class HomeView(ListView):
     template_name = 'index.html'
     model = Post
+    paginate_by = 5
     context_object_name = 'posts'
     ordering = ['-edited_on', '-created_on']
 
@@ -39,6 +40,7 @@ class HomeView(ListView):
 class CategoryView(ListView):
     template_name = 'category.html'
     model = Post
+    paginate_by = 5
     context_object_name = 'posts'
     ordering = ['-edited_on', '-created_on']
 

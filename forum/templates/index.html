@@ -30,7 +30,9 @@
             <div class="col-lg-9 mb-3">
                 {% if request.user.is_authenticated %}
                     <a class="btn btn-lg btn-block btn-success rounded-50 py-3 mb-3 roboto-bold d-flex justify-content-center"
-                       href="{% url 'create post' %}">New Post</a>
+                       href="{% url 'create post' %}">
+                        New Post
+                    </a>
                 {% endif %}
                 {% for post in posts %}
                     <!-- post 1 -->
@@ -51,17 +53,27 @@
                                         <span class="op-6">by</span> <a class="text-black" href="#">{{ post.user }}</a>
                                     </p>
                                 {% endif %}
-                                <div class="text-sm op-5"><span class="op-6">Category: </span><a class="text-black mr-2" href="{% url 'category view' post.category.id %}">{{post.category}}</a>
+                                <div class="text-sm op-5">
+                                    <span class="op-6">Category: </span>
+                                    <a class="text-black mr-2" href="{% url 'category view' post.category.id %}">
+                                        {{ post.category }}
+                                    </a>
                                 </div>
                             </div>
                             <div class="col-md-4 op-7">
                                 <div class="row text-center op-7">
-                                    <div class="col px-1"><span class="iconify icon-1x" data-icon="ion:heart-outline"></span> <span
-                                            class="d-block text-sm">{{ post.like_set.count }} Likes</span></div>
-                                    <div class="col px-1"><span class="iconify icon-1x" data-icon="ion:chatbubbles-outline"></span> <span
-                                            class="d-block text-sm">{{ post.comment_set.count}} Comments</span></div>
-                                    <div class="col px-1"><span class="iconify icon-1x" data-icon="ion:eye-outline"></span> <span
-                                            class="d-block text-sm">{{ post.hit_count.hits }} Views</span></div>
+                                    <div class="col px-1">
+                                        <span class="iconify icon-1x" data-icon="ion:heart-outline"></span>
+                                        <span class="d-block text-sm">{{ post.like_set.count }} Likes</span>
+                                    </div>
+                                    <div class="col px-1">
+                                        <span class="iconify icon-1x" data-icon="ion:chatbubbles-outline"></span>
+                                        <span class="d-block text-sm">{{ post.comment_set.count }} Comments</span>
+                                    </div>
+                                    <div class="col px-1">
+                                        <span class="iconify icon-1x" data-icon="ion:eye-outline"></span>
+                                        <span class="d-block text-sm">{{ post.hit_count.hits }} Views</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -80,19 +92,31 @@
                             </h4>
                             <hr class="my-0">
                             <div class="row text-center d-flex flex-row op-7 mx-0">
-                                <div class="col-sm-6 flex-ew text-center py-3 border-bottom border-right"><a
-                                        class="d-block lead font-weight-bold text-primary">{{ categories.count }}</a> Categories
+                                <div class="col-sm-6 flex-ew text-center py-3 border-bottom border-right">
+                                    <a class="d-block lead font-weight-bold text-primary">
+                                        {{ categories.count }}
+                                    </a>
+                                    Categories
                                 </div>
-                                <div class="col-sm-6 col flex-ew text-center py-3 border-bottom mx-0"><a
-                                        class="d-block lead font-weight-bold text-primary">{{ posts.count }}</a> Posts
+                                <div class="col-sm-6 col flex-ew text-center py-3 border-bottom mx-0">
+                                    <a class="d-block lead font-weight-bold text-primary">
+                                        {{ posts.count }}
+                                    </a>
+                                    Posts
                                 </div>
                             </div>
                             <div class="row d-flex flex-row op-7">
-                                <div class="col-sm-6 flex-ew text-center py-3 border-right mx-0"><a
-                                        class="d-block lead font-weight-bold text-primary">{{ users_count }}</a> Members
+                                <div class="col-sm-6 flex-ew text-center py-3 border-right mx-0">
+                                    <a class="d-block lead font-weight-bold text-primary">
+                                        {{ users_count }}
+                                    </a>
+                                    Members
                                 </div>
-                                <div class="col-sm-6 flex-ew text-center py-3 mx-0"><a
-                                        class="d-block lead font-weight-bold text-primary" href="#">{{ latest_user }}</a> Newest Member
+                                <div class="col-sm-6 flex-ew text-center py-3 mx-0">
+                                    <a class="d-block lead font-weight-bold text-primary" href="#">
+                                        {{ latest_user }}
+                                    </a>
+                                    Newest Member
                                 </div>
                             </div>
                         </div>
@@ -101,4 +125,24 @@
             </div>
         </div>
     </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 mb-3">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page=1">First</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+                        {% endif %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.number }}">{{ page_obj.number }}</a></li>
+                        {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

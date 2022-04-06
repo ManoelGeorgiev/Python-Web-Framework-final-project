@@ -4,7 +4,8 @@ from forum.main.models import Post, Comment
 
 
 class RedirectIfNotPostOwner:
-
+    # throw 404 if the post you are trying to edit/delete doesn't exist
+    # redirects if not the post owner
     def dispatch(self, request, *args, **kwargs):
         pk = self.kwargs['pk']
         post = get_object_or_404(Post, pk=pk)
@@ -14,7 +15,8 @@ class RedirectIfNotPostOwner:
 
 
 class RedirectIfNotCommentOwner:
-
+    # throw 404 if the post for which you are trying to make/edit or delete a comment doesn't exist
+    # redirects if not the comment owner
     def dispatch(self, request, *args, **kwargs):
         pk = self.kwargs['pk']
         comment = get_object_or_404(Comment, pk=pk)

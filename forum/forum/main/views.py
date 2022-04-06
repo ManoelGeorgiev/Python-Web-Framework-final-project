@@ -31,6 +31,7 @@ class HomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['users_count'] = UserModel.objects.all().count()
+        context['posts_count'] = Post.objects.filter(closed=False).count()
         try:
             context['latest_user'] = UserModel.objects.latest('date_joined')
         except UserModel.DoesNotExist:
@@ -61,6 +62,7 @@ class CategoryView(ListView):
         context = super().get_context_data(**kwargs)
         context['category'] = Category.objects.get(pk=self.kwargs['pk'])
         context['users_count'] = UserModel.objects.all().count()
+        context['posts_count'] = Post.objects.filter(closed=False, category_id=self.kwargs['pk']).count()
         try:
             context['latest_user'] = UserModel.objects.latest('date_joined')
         except UserModel.DoesNotExist:

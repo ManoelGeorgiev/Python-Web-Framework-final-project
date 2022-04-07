@@ -32,6 +32,7 @@ class HomeView(ListView):
         context = super().get_context_data(**kwargs)
         context['users_count'] = UserModel.objects.all().count()
         context['posts_count'] = Post.objects.filter(closed=False).count()
+        context['comments_count'] = Comment.objects.filter(post__closed=False).count()
         try:
             context['latest_user'] = UserModel.objects.latest('date_joined')
         except UserModel.DoesNotExist:

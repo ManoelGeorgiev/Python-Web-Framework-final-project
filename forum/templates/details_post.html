@@ -41,6 +41,7 @@
                     </div>
                     <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
                         <div class="px-4 pt-3">
+                            <span>Total Likes: {{ post.like_set.count }}</span>
                             {% if request.user.is_authenticated %}
                                 {% if not is_owner %}
                                     {% if user_liked %}
@@ -50,7 +51,6 @@
                                            data-abc="true">
                                             <span class="iconify icon-1x" data-icon="ion:heart"></span>
                                         </a>
-                                        <span>Total Likes: {{ post.like_set.count }}</span>
                                     {% else %}
                                         <span>Like: </span>
                                         <a href="{% url 'like post' post.pk %}"
@@ -58,10 +58,8 @@
                                            data-abc="true">
                                             <span class="iconify icon-1x" data-icon="ion:heart-outline"></span>
                                         </a>
-                                         <span>Total Likes: {{ post.like_set.count }}</span>
                                     {% endif %}
                                 {% else %}
-                                    <span>Post: </span>
                                     <a href="{% url 'edit post' post.pk %}"
                                        class="btn btn-primary d-inline-flex align-items-center align-middle"
                                        data-abc="true">Edit
@@ -110,9 +108,9 @@
                     </div>
                     <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
                         <div class="px-4 pt-3">
+                            <span>Total Likes: {{ comment.commentlikebutton_set.count }}</span>
                             {% if request.user.is_authenticated %}
                                 {% if request.user.id == comment.user.id %}
-                                    <span>Comment: </span>
                                     <a href="{% url 'edit comment' comment.pk %}"
                                        class="btn btn-primary d-inline-flex align-items-center align-middle"
                                        data-abc="true">Edit
@@ -121,6 +119,22 @@
                                        class="btn btn-danger d-inline-flex align-items-center align-middle"
                                        data-abc="true">Delete
                                     </a>
+                                    {% else %}
+                                        {% if comment.id in comments_likes %}
+                                        <span>Like: </span>
+                                        <a href="{% url 'like comment' comment.pk %}"
+                                           class="text-muted d-inline-flex align-items-center align-middle"
+                                           data-abc="true">
+                                            <span class="iconify icon-1x" data-icon="ion:heart"></span>
+                                        </a>
+                                    {% else %}
+                                        <span>Like: </span>
+                                        <a href="{% url 'like comment' comment.pk %}"
+                                           class="text-muted d-inline-flex align-items-center align-middle"
+                                           data-abc="true">
+                                            <span class="iconify icon-1x" data-icon="ion:heart-outline"></span>
+                                        </a>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                         </div>
@@ -129,8 +143,8 @@
             </div>
         </div>
     {% endfor %}
-
-    <div class="container">
+    {% if page_obj.paginator.num_pages > 1 %}
+        <div class="container">
         <div class="row">
             <div class="col-lg-9 mb-3">
                 <nav aria-label="Page navigation example">
@@ -149,7 +163,7 @@
             </div>
         </div>
     </div>
-
+    {% endif %}
     <div class="row">
         <div class="col-md-12">
             {% if request.user.is_authenticated %}

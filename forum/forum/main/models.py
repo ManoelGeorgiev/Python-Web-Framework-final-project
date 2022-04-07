@@ -98,3 +98,15 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.content[:50]}'
+
+
+class CommentLikeButton(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+
+    comment = models.ForeignKey(
+        Comment,
+        on_delete=models.CASCADE,
+    )

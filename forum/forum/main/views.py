@@ -11,7 +11,7 @@ from hitcount.views import HitCountDetailView
 from forum.main.forms import CreatePostForm, EditPostForm, DeletePostForm, EditCommentForm, DeleteCommentForm, \
     CreateCommentForm
 from forum.main.mixins import RedirectIfNotPostOwnerMixin, RedirectIfNotCommentOwnerMixin, RedirectToPreviousMixin
-from forum.main.models import Post, Like, Category, Comment
+from forum.main.models import Post, Like, Category, Comment, CommentLikeButton
 
 UserModel = get_user_model()
 
@@ -123,7 +123,7 @@ class PostDetailsView(HitCountDetailView):
 
     # prefetch the like and comment sets
     def get_queryset(self):
-        queryset = super().get_queryset().prefetch_related('like_set', 'comment_set')
+        queryset = super().get_queryset().prefetch_related('like_set', 'comment_set__commentlikebutton_set')
         return queryset
 
     # creates pagination for the comment_set
@@ -144,6 +144,7 @@ class PostDetailsView(HitCountDetailView):
         context['is_owner'] = self.object.user == self.request.user
         if self.request.user.is_authenticated:
             context['user_liked'] = self.object.like_set.filter(user=self.request.user) and True or False
+            context['comments_likes'] = CommentLikeButton.objects.filter(user=self.request.user).values_list('comment_id', flat=True)
         return context
 
 
@@ -177,4 +178,15 @@ class DeleteCommentView(RedirectToPreviousMixin, RedirectIfNotCommentOwnerMixin,
     model = Comment
     template_name = 'delete_comment.html'
     form_class = DeleteCommentForm
+
+
+def like_comment(request, pk):
+    comment = get_object_or_404(Comment, pk=pk)
+    if request.user.pk == comment.user_id or not request.user.is_authenticated:
+        return redirect('index')
+
+    new_like, created = CommentLikeButton.objects.get_or_create(user_id=request.user.pk, comment_id=pk)
+    if not created:
+        CommentLikeButton.objects.get(user_id=request.user.pk, comment_id=pk).delete()
+    return redirect(request.META.get('HTTP_REFERER', '/'))
 

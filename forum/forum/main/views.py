@@ -10,7 +10,7 @@ from hitcount.views import HitCountDetailView
 
 from forum.main.forms import CreatePostForm, EditPostForm, DeletePostForm, EditCommentForm, DeleteCommentForm, \
     CreateCommentForm
-from forum.main.mixins import RedirectIfNotPostOwner, RedirectIfNotCommentOwner
+from forum.main.mixins import RedirectIfNotPostOwnerMixin, RedirectIfNotCommentOwnerMixin, RedirectToPreviousMixin
 from forum.main.models import Post, Like, Category, Comment
 
 UserModel = get_user_model()
@@ -83,7 +83,7 @@ class CreatePostView(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class EditPostView(RedirectIfNotPostOwner, LoginRequiredMixin, UpdateView):
+class EditPostView(RedirectIfNotPostOwnerMixin, LoginRequiredMixin, UpdateView):
     model = Post
     template_name = 'edit_post.html'
     form_class = EditPostForm
@@ -92,7 +92,7 @@ class EditPostView(RedirectIfNotPostOwner, LoginRequiredMixin, UpdateView):
         return reverse_lazy('post details', kwargs={'pk': self.object.pk})
 
 
-class DeletePostView(RedirectIfNotPostOwner, LoginRequiredMixin, DeletionMixin, UpdateView):
+class DeletePostView(RedirectIfNotPostOwnerMixin, LoginRequiredMixin, DeletionMixin, UpdateView):
     model = Post
     template_name = 'delete_post.html'
     success_url = reverse_lazy('index')
@@ -150,7 +150,7 @@ class PostDetailsView(HitCountDetailView):
         return context
 
 
-class CreateCommentView(LoginRequiredMixin, CreateView):
+class CreateCommentView(RedirectToPreviousMixin, LoginRequiredMixin, CreateView):
     template_name = 'create_comment.html'
     form_class = CreateCommentForm
 
@@ -169,23 +169,23 @@ class CreateCommentView(LoginRequiredMixin, CreateView):
         kwargs['post_pk'] = self.kwargs['pk']
         return kwargs
 
-    def get_success_url(self):
-        return reverse_lazy('post details', kwargs={'pk': self.kwargs['pk']})
+    # def get_success_url(self):
+    #     return reverse_lazy('post details', kwargs={'pk': self.kwargs['pk']})
 
 
-class EditCommentView(RedirectIfNotCommentOwner, LoginRequiredMixin, UpdateView):
+class EditCommentView(RedirectToPreviousMixin, RedirectIfNotCommentOwnerMixin, LoginRequiredMixin, UpdateView):
     model = Comment
     template_name = 'edit_comment.html'
     form_class = EditCommentForm
 
-    def get_success_url(self):
-        return reverse_lazy('post details', kwargs={'pk': self.object.post.pk})
+    # def get_success_url(self):
+    #     return reverse_lazy('post details', kwargs={'pk': self.object.post.pk})
 
 
-class DeleteCommentView(RedirectIfNotCommentOwner, LoginRequiredMixin, DeletionMixin, UpdateView):
+class DeleteCommentView(RedirectToPreviousMixin, RedirectIfNotCommentOwnerMixin, LoginRequiredMixin, DeletionMixin, UpdateView):
     model = Comment
     template_name = 'delete_comment.html'
     form_class = DeleteCommentForm
 
-    def get_success_url(self):
-        return reverse_lazy('post details', kwargs={'pk': self.object.post.pk})
+    # def get_success_url(self):
+    #     return reverse_lazy('post details', kwargs={'pk': self.object.post.pk})

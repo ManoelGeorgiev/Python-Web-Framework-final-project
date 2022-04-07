@@ -1,11 +1,12 @@
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DetailView
 
 from forum.accounts.forms import LoginForm, RegisterForm, DeleteProfileForm
 from forum.accounts.mixins import RedirectIfLoggedMixin
 from forum.accounts.models import ForumUser
+from forum.main.models import Post, Comment
 
 
 class LogInView(RedirectIfLoggedMixin, LoginView):
@@ -40,3 +41,15 @@ class DeleteProfileView(UpdateView):
         if not request.user.id == self.kwargs['pk']:
             return redirect('index')
         return super().dispatch(request, *args, **kwargs)
+
+
+class ProfileView(DetailView):
+    model = ForumUser
+    template_name = 'profile_page.html'
+    context_object_name = 'user'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['number_of_posts'] = Post.objects.filter(closed=False, user=self.object.pk).count()
+        context['number_of_comments'] = Comment.objects.filter(post__closed=False, user=self.object.pk).count()
+        return context

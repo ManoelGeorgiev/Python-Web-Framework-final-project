@@ -48,7 +48,7 @@
                     </div>
                 {% else %}
                     <div class="navbar-nav ms-auto">
-                        <a href="#" class="nav-item nav-link">Profile</a>
+                        <a href="{% url 'profile' request.user.pk %}" class="nav-item nav-link">Profile</a>
                         <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
                     </div>
                 {% endif %}

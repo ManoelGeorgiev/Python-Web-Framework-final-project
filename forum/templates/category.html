@@ -28,12 +28,18 @@
                                 {% if post.created_on == post.edited_on %}
                                     <p class="text-sm"><span class="op-6">Posted on</span>
                                         <span class="text-black">{{ post.created_on }}</span>
-                                        <span class="op-6">by</span> <a class="text-black" href="#">{{ post.user }}</a>
+                                        <span class="op-6">by</span>
+                                        <a class="text-black" href="{% url 'profile' post.user.pk %}">
+                                            {{ post.user }}
+                                        </a>
                                     </p>
                                 {% else %}
                                     <p class="text-sm"><span class="op-6">Edited on</span>
                                         <span class="text-black">{{ post.edited_on }}</span>
-                                        <span class="op-6">by</span> <a class="text-black" href="#">{{ post.user }}</a>
+                                        <span class="op-6">by</span>
+                                        <a class="text-black" href="{% url 'profile' post.user.pk %}">
+                                            {{ post.user }}
+                                        </a>
                                     </p>
                                 {% endif %}
                                 <div class="text-sm op-5"><span class="op-6">Category: </span>
@@ -83,7 +89,7 @@
                                 </div>
                                 <div class="col-sm-6 flex-ew text-center py-3 mx-0"><a
                                         class="d-block lead font-weight-bold text-primary"
-                                        href="#">{{ latest_user }}</a> Newest Member
+                                        href="{% url 'profile' latest_user.pk %}">{{ latest_user }}</a> Newest Member
                                 </div>
                             </div>
                         </div>

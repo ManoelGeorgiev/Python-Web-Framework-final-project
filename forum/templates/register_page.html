@@ -9,6 +9,7 @@
                     alt="forum-logo">
                 <form class="form-signin d-grid" action="{% url 'register' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
+                    {{ form.media }}
                     {{ form }}
 
 {#                <input type="text" class="form-control" placeholder="Email" required autofocus>#}

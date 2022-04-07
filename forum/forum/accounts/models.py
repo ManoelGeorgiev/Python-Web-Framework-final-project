@@ -54,9 +54,9 @@ class Profile(models.Model):
         blank=True,
     )
 
-    description = models.TextField(
+    bio = models.TextField()
 
-    )
+    email = models.EmailField()
 
     user = models.OneToOneField(
         ForumUser,
@@ -66,3 +66,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user}'
+
+    @property
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'

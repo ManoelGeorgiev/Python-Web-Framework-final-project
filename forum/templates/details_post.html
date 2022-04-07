@@ -21,7 +21,7 @@
                         <div class="media d-inline-flex align-items-center">
                             <img src="{{ post.user.profile.picture.url }}" class="d-block ui-w-40 rounded-circle" alt="">
                             <div class="media-body d-inline-flex ms-2">
-                                <a href="#" data-abc="true">{{ post.user }}
+                                <a href="{% url 'profile' post.user.pk %}" data-abc="true">{{ post.user }}
                             </a>
                                 {% if post.created_on == post.edited_on %}
                                     <div class="text-muted small ms-2 d-inline-flex">Posted
@@ -88,7 +88,7 @@
                             <img src="{{ comment.user.profile.picture.url }}" class="d-block ui-w-40 rounded-circle"
                                  alt="">
                             <div class="media-body d-inline-flex ms-2">
-                                <a href="#" data-abc="true">{{ comment.user }}
+                                <a href="{% url 'profile' comment.user.pk %}" data-abc="true">{{ comment.user }}
                                 </a>
                                 {% if comment.created_on == comment.edited_on %}
                                     <div class="text-muted small ms-2 d-inline-flex">Posted

@@ -363,3 +363,12 @@ a {
     height: auto
 }
 
+.prof-img {
+    width: 60%;
+    height: auto;
+    margin: 10px auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}

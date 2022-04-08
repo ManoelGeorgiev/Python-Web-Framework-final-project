@@ -8,9 +8,10 @@ from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.edit import DeletionMixin
 from hitcount.views import HitCountDetailView
 
+from forum.common.mixins import RedirectToPreviousMixin
 from forum.main.forms import CreatePostForm, EditPostForm, DeletePostForm, EditCommentForm, DeleteCommentForm, \
     CreateCommentForm
-from forum.main.mixins import RedirectIfNotPostOwnerMixin, RedirectIfNotCommentOwnerMixin, RedirectToPreviousMixin
+from forum.main.mixins import RedirectIfNotPostOwnerMixin, RedirectIfNotCommentOwnerMixin
 from forum.main.models import Post, Like, Category, Comment, CommentLikeButton
 
 UserModel = get_user_model()

@@ -1,25 +1,27 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+{{form.media}}
 <div class="container bootstrap snippets bootdey">
     <div class="row">
             <div class="d-flex mt-3">
                 <h6>
                     <a class="text-primary" href="{% url 'index' %}">Forum</a> >>
-                    <a class="text-primary" href="{% url 'profile' profile.pk %}">Profile</a> >>
-                    <a class="text-primary" href="{% url 'delete profile' profile.pk %}">Delete</a>
+                    <a class="text-primary" href="{% url 'profile' user.profile.pk %}">Profile</a> >>
+                    <a class="text-primary" href="{% url 'edit profile' user.profile.pk %}">Edit</a>
                 </h6>
             </div>
         </div>
     <div class="row justify-content-center">
         <div class="col-sm-8 col-md-8 col-md-offset-3">
             <div class="account-wall">
-                <h5 class="text-center">Are you sure you want to delete your profile?</h5>
-                <form class="form-signin d-grid" action="{% url 'delete profile' profile.pk %}" method="post" enctype="multipart/form-data">
+                <h5 class="text-center">Edit Profile</h5>
+                <form class="form-signin d-grid" action="{% url 'edit profile' user.profile.pk %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
+                    {{ form.media }}
                     {{ form }}
-                <button class="btn btn-danger p-2 mt-2" type="submit">
-                    Delete</button>
+                <button class="btn btn-primary p-2 mt-2" type="submit">
+                    Edit</button>
                 </form>
             </div>
         </div>

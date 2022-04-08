@@ -7,6 +7,8 @@ from forum.accounts.models import ForumUser, Profile
 from forum.common.helpers import BootstrapMixin
 from forum.common.validators import validate_image_max_size_when_registering
 
+UserModel = get_user_model()
+
 
 class LoginForm(BootstrapMixin, AuthenticationForm):
 
@@ -33,13 +35,13 @@ class LoginForm(BootstrapMixin, AuthenticationForm):
     )
 
     class Meta:
-        model = get_user_model()
+        model = UserModel
         field = ['username', 'password']
 
 
 class RegisterForm(BootstrapMixin, UserCreationForm):
     class Meta:
-        model = get_user_model()
+        model = UserModel
         fields = ['username', 'password1', 'password2', 'email', 'first_name', 'last_name', 'date_of_birth', 'picture',
                   'bio']
 
@@ -98,4 +100,23 @@ class DeleteProfileForm(forms.ModelForm):
         photo_path = self.instance.profile.picture.path
         os.remove(photo_path)
         self.instance.delete()
+        return self.instance
+
+
+class EditProfileForm(BootstrapMixin, forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['email', 'first_name', 'last_name', 'date_of_birth', 'picture', 'bio']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._init_bootstrap_for_fields()
+
+    # checks if there is new picture and deletes the old one
+    def save(self, commit=True):
+        past_photo_name = self.initial['picture'].name
+        new_photo_name = self.cleaned_data['picture'].name
+        if not past_photo_name == new_photo_name:
+            os.remove(self.initial['picture'].path)
+        self.instance.save()
         return self.instance

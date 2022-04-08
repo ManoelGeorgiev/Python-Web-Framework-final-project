@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView
 
 from forum.accounts.forms import LoginForm, RegisterForm, DeleteProfileForm, EditProfileForm
-from forum.accounts.mixins import RedirectIfLoggedMixin
+from forum.accounts.mixins import RedirectIfLoggedMixin, RedirectIfNotProfileOwnerMixin
 from forum.accounts.models import ForumUser, Profile
 from forum.common.mixins import RedirectToPreviousMixin
 from forum.main.models import Post, Comment
@@ -48,27 +48,15 @@ class ProfileView(DetailView):
         return context
 
 
-class EditProfileView(RedirectToPreviousMixin, LoginRequiredMixin, UpdateView):
+class EditProfileView(RedirectIfNotProfileOwnerMixin, RedirectToPreviousMixin, LoginRequiredMixin, UpdateView):
     model = Profile
     template_name = 'edit_profile.html'
     form_class = EditProfileForm
 
-    def dispatch(self, request, *args, **kwargs):
-        pk = self.kwargs['pk']
-        if not pk == request.user.pk:
-            return redirect('index')
-        return super().dispatch(request, *args, **kwargs)
 
-
-class DeleteProfileView(LoginRequiredMixin, UpdateView):
+class DeleteProfileView(RedirectIfNotProfileOwnerMixin, LoginRequiredMixin, UpdateView):
     model = ForumUser
     success_url = reverse_lazy('index')
     form_class = DeleteProfileForm
     context_object_name = 'profile'
     template_name = 'delete_profile.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        pk = self.kwargs['pk']
-        if not pk == request.user.pk:
-            return redirect('index')
-        return super().dispatch(request, *args, **kwargs)

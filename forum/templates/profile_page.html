@@ -14,10 +14,10 @@
             <div class="col-lg-12 mb-3 mt-1">
                 <div class="card">
                     <div class="row m-l-0 m-r-0">
-                        <div class="col-sm-4">
+                        <div class="col-sm-4 bg-c-lite-green">
                             <div class="card-block text-center">
-                                <div class="m-b-25"> <img src="{{ user.profile.picture.url }}" class="prof-img d-block ui-w-40 rounded-circle" alt="User-Profile-Image"> </div>
-                                <h6 class="f-w-600 mb-3">{{ user.profile.full_name}}</h6>
+                                <div class="m-b-25"> <img src="{{ user.profile.picture.url }}" class="d-block ui-w-40 rounded-circle prof-img" alt="User-Profile-Image"> </div>
+                                <h6 class="f-w-600 mb-3 text-white-profile">{{ user.profile.full_name}}</h6>
                                 {% if request.user.is_authenticated %}
                                     {% if request.user.pk == user.pk %}
                                         <a href="{% url 'edit profile' user.pk %}"

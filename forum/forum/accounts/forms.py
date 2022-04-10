@@ -3,7 +3,7 @@ import os
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from forum.accounts.models import ForumUser, Profile
+from forum.accounts.models import Profile
 from forum.common.helpers import BootstrapMixin
 from forum.common.validators import validate_image_max_size_when_registering
 

@@ -1,6 +1,4 @@
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchHeadline
-from django.core.paginator import Paginator
-
 from forum.main.models import Category, Post
 
 

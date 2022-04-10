@@ -41,6 +41,10 @@
                         <a href="{% url 'create post' %}" class="nav-item nav-link">Create Post</a>
                     {% endif %}
                 </div>
+                <form class="d-flex ms-auto" action="{% url 'search' %}">
+                    <input class="form-control me-2" type="text" name="q" placeholder="Search for a Post" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
                 {% if not request.user.is_authenticated %}
                     <div class="navbar-nav ms-auto">
                         <a href="{% url 'login' %}" class="nav-item nav-link">Login</a>
@@ -48,6 +52,9 @@
                     </div>
                 {% else %}
                     <div class="navbar-nav ms-auto">
+                        {% if request.user.is_staff %}
+                            <a class="nav-item nav-link" href="{% url 'index' %}admin">Admin Panel</a>
+                        {% endif %}
                         <a href="{% url 'profile' request.user.pk %}" class="nav-item nav-link">Profile</a>
                         <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
                     </div>

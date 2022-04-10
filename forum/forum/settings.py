@@ -56,6 +56,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'forum.common.context_processors.categories',
+                'forum.common.context_processors.search',
             ],
         },
     },

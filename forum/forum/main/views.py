@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
 from django.http import Http404
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView
 from django.views.generic.edit import DeletionMixin
@@ -191,3 +191,6 @@ def like_comment(request, pk):
         CommentLikeButton.objects.get(user_id=request.user.pk, comment_id=pk).delete()
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
+
+def search_result(request):
+    return render(request, 'search.html')

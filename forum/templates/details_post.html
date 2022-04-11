@@ -166,13 +166,17 @@
     {% endif %}
     <div class="row">
         <div class="col-md-12">
-            {% if request.user.is_authenticated %}
-                <a class="btn btn-lg btn-block btn-success rounded-50 py-3 mb-3 roboto-bold d-flex justify-content-center"
-                   href="{% url 'create comment' post.pk %}">
-                    Add a comment
-                </a>
-            {% else %}
-                <h4>You need to be logged in to add a comment!</h4>
+            {% if post.closed %}
+                <h4>This topic is closed!</h4>
+                    {% else %}
+                {% if request.user.is_authenticated %}
+                    <a class="btn btn-lg btn-block btn-success rounded-50 py-3 mb-3 roboto-bold d-flex justify-content-center"
+                       href="{% url 'create comment' post.pk %}">
+                        Add a comment
+                    </a>
+                {% else %}
+                    <h4>You need to be logged in to add a comment!</h4>
+                {% endif %}
             {% endif %}
         </div>
     </div>

@@ -94,6 +94,9 @@
                         <div class="row align-items-center">
                             <div class="col-md-8 mb-3 mb-sm-0">
                                 <h5>
+                                    {% if post.closed %}
+                                        <span class="iconify icon-1x" data-icon="bxs:lock-alt"></span>
+                                    {% endif %}
                                     <a href="{% url 'post details' post.pk %}" class="text-primary">{{ post.title }}</a>
                                 </h5>
                                 {% if post.created_on == post.edited_on %}

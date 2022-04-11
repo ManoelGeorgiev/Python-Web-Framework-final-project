@@ -1,7 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.http import Http404
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView
@@ -22,18 +21,18 @@ class HomeView(ListView):
     model = Post
     paginate_by = 5
     context_object_name = 'posts'
-    ordering = ['-edited_on', '-created_on']
+    ordering = ['-created_on']
 
     # prefetch the like and comment sets
     def get_queryset(self):
-        queryset = super().get_queryset().filter(closed=False).prefetch_related('like_set', 'comment_set')
+        queryset = super().get_queryset().prefetch_related('like_set', 'comment_set')
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['users_count'] = UserModel.objects.all().count()
-        context['posts_count'] = Post.objects.filter(closed=False).count()
-        context['comments_count'] = Comment.objects.filter(post__closed=False).count()
+        context['posts_count'] = Post.objects.count()
+        context['comments_count'] = Comment.objects.count()
         try:
             context['latest_user'] = UserModel.objects.latest('date_joined')
         except UserModel.DoesNotExist:
@@ -46,7 +45,7 @@ class CategoryView(ListView):
     model = Post
     paginate_by = 5
     context_object_name = 'posts'
-    ordering = ['-edited_on', '-created_on']
+    ordering = ['-created_on']
 
     # check if category exist before loading the page
     def dispatch(self, request, *args, **kwargs):
@@ -56,7 +55,7 @@ class CategoryView(ListView):
 
     # prefetch the like and comment sets
     def get_queryset(self):
-        queryset = super().get_queryset().filter(closed=False, category_id=self.kwargs['pk']) \
+        queryset = super().get_queryset().filter(category_id=self.kwargs['pk']) \
             .prefetch_related('like_set', 'comment_set')
         return queryset
 
@@ -64,7 +63,7 @@ class CategoryView(ListView):
         context = super().get_context_data(**kwargs)
         context['category'] = Category.objects.get(pk=self.kwargs['pk'])
         context['users_count'] = UserModel.objects.all().count()
-        context['posts_count'] = Post.objects.filter(closed=False, category_id=self.kwargs['pk']).count()
+        context['posts_count'] = Post.objects.filter(category_id=self.kwargs['pk']).count()
         try:
             context['latest_user'] = UserModel.objects.latest('date_joined')
         except UserModel.DoesNotExist:
@@ -114,12 +113,10 @@ class PostDetailsView(HitCountDetailView):
     template_name = 'details_post.html'
     context_object_name = 'post'
 
-    # check if the post exists and it's not closed before loading the page
+    # check if the post exists before loading the page
     def dispatch(self, request, *args, **kwargs):
         pk = self.kwargs['pk']
         post = get_object_or_404(Post, pk=pk)
-        if post.closed:
-            return Http404()
         return super().dispatch(request, *args, **kwargs)
 
     # prefetch the like and comment sets
@@ -158,7 +155,7 @@ class CreateCommentView(RedirectToPreviousMixin, LoginRequiredMixin, CreateView)
         pk = self.kwargs['pk']
         post = get_object_or_404(Post, pk=pk)
         if post.closed:
-            return Http404()
+            return redirect('index')
         return super().dispatch(request, *args, **kwargs)
 
     # pass the user and post_pk to the form

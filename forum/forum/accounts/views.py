@@ -42,8 +42,8 @@ class ProfileView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['posts'] = Post.objects.filter(closed=False, user=self.object.pk)
-        context['number_of_comments'] = Comment.objects.filter(post__closed=False, user=self.object.pk).count()
+        context['posts'] = Post.objects.filter(user=self.object.pk)
+        context['number_of_comments'] = Comment.objects.filter(user=self.object.pk).count()
         return context
 
 

@@ -25,7 +25,7 @@ class HomeView(ListView):
 
     # prefetch the like and comment sets
     def get_queryset(self):
-        queryset = super().get_queryset().prefetch_related('like_set', 'comment_set')
+        queryset = super().get_queryset().prefetch_related('like_set', 'comment_set', 'tag')
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -56,7 +56,7 @@ class CategoryView(ListView):
     # prefetch the like and comment sets
     def get_queryset(self):
         queryset = super().get_queryset().filter(category_id=self.kwargs['pk']) \
-            .prefetch_related('like_set', 'comment_set')
+            .prefetch_related('like_set', 'comment_set', 'tag')
         return queryset
 
     def get_context_data(self, **kwargs):

@@ -1,4 +1,5 @@
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, SearchHeadline
+from django.contrib.postgres.aggregates import StringAgg
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from forum.main.models import Category, Post
 
 
@@ -10,12 +11,12 @@ def categories(request):
 def search(request):
     q = request.GET.get('q')
     if q:
-        vector = SearchVector('title')
+        vector = SearchVector('title') + SearchVector('category__title') \
+                 + SearchVector(StringAgg('tag__name', delimiter=' '))
         query = SearchQuery(q)
-        search_headline = SearchHeadline('title', query)
 
-        posts = Post.objects.annotate(rank=SearchRank(vector, query)).annotate(headline=search_headline)\
-            .filter(rank__gte=0.001).order_by('-rank')
+        posts = Post.objects.annotate(rank=SearchRank(vector, query))\
+            .filter(rank__gte=0.0001).order_by('-rank').distinct()
     else:
         posts = None
 

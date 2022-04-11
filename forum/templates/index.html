@@ -67,6 +67,12 @@
                                     <a class="text-black mr-2" href="{% url 'category view' post.category.id %}">
                                         {{ post.category }}
                                     </a>
+                                    {% if post.tag.all %}
+                                        <span>/ Tags: </span>
+                                    {% endif %}
+                                    {% for t in post.tag.all %}
+                                        <span class="tag-post">{{ t.name }}</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                             <div class="col-md-4 op-7">

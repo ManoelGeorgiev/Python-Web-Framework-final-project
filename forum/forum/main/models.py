@@ -15,10 +15,23 @@ class Category(models.Model):
 
     title = models.CharField(
         max_length=TITLE_MAX_LENGTH,
+        unique=True,
     )
 
     def __str__(self):
         return f'{self.title}'
+
+
+class Tag(models.Model):
+    NAME_MAX_LENGTH = 30
+
+    name = models.CharField(
+        max_length=NAME_MAX_LENGTH,
+        unique=True,
+    )
+
+    def __str__(self):
+        return f'{self.name}'
 
 
 class Post(models.Model, HitCountMixin):
@@ -33,6 +46,10 @@ class Post(models.Model, HitCountMixin):
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
+    )
+
+    tag = models.ManyToManyField(
+        Tag
     )
 
     user = models.ForeignKey(

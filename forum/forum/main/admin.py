@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from forum.main.models import Post, Category, Comment
+from forum.main.models import Post, Category, Comment, Tag
 
 
 class CommentInline(admin.TabularInline):
@@ -14,6 +14,11 @@ class PostAdmin(admin.ModelAdmin):
     inlines = [
         CommentInline,
     ]
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('name',)
 
 
 @admin.register(Category)

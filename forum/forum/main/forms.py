@@ -8,7 +8,7 @@ from forum.main.models import Post, Comment
 class CreatePostForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'category', 'content']
+        fields = ['title', 'category', 'tag', 'content']
 
     def __init__(self, user, *args, **kwargs):
         self.user = user
@@ -20,13 +20,14 @@ class CreatePostForm(BootstrapMixin, forms.ModelForm):
         post.user = self.user
         if commit:
             post.save()
+            self._save_m2m()
         return post
 
 
 class EditPostForm(BootstrapMixin, forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'category', 'content']
+        fields = ['title', 'category', 'tag', 'content']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

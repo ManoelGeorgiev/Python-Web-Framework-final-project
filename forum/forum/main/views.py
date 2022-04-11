@@ -11,7 +11,7 @@ from forum.common.mixins import RedirectToPreviousMixin
 from forum.main.forms import CreatePostForm, EditPostForm, DeletePostForm, EditCommentForm, DeleteCommentForm, \
     CreateCommentForm
 from forum.main.mixins import RedirectIfNotPostOwnerMixin, RedirectIfNotCommentOwnerMixin
-from forum.main.models import Post, Like, Category, Comment, CommentLikeButton
+from forum.main.models import Post, Like, Category, Comment, CommentLikeButton, Tag
 
 UserModel = get_user_model()
 
@@ -64,6 +64,37 @@ class CategoryView(ListView):
         context['category'] = Category.objects.get(pk=self.kwargs['pk'])
         context['users_count'] = UserModel.objects.all().count()
         context['posts_count'] = Post.objects.filter(category_id=self.kwargs['pk']).count()
+        try:
+            context['latest_user'] = UserModel.objects.latest('date_joined')
+        except UserModel.DoesNotExist:
+            context['latest_user'] = 'None'
+        return context
+
+
+class TagView(ListView):
+    template_name = 'tag.html'
+    model = Post
+    paginate_by = 5
+    context_object_name = 'posts'
+    ordering = ['-created_on']
+
+    # check if category exist before loading the page
+    def dispatch(self, request, *args, **kwargs):
+        tag_pk = self.kwargs['pk']
+        tag = get_object_or_404(Tag, pk=tag_pk)
+        return super().dispatch(request, *args, **kwargs)
+
+    # prefetch the like and comment sets
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(tag=self.kwargs['pk'])\
+            .prefetch_related('like_set', 'comment_set', 'tag')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tag'] = Tag.objects.get(pk=self.kwargs['pk'])
+        context['users_count'] = UserModel.objects.all().count()
+        context['posts_count'] = Post.objects.filter(tag=self.kwargs['pk']).count()
         try:
             context['latest_user'] = UserModel.objects.latest('date_joined')
         except UserModel.DoesNotExist:

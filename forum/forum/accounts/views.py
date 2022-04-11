@@ -42,7 +42,7 @@ class ProfileView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['posts'] = Post.objects.filter(user=self.object.pk)
+        context['posts'] = Post.objects.filter(user=self.object.pk).order_by('-created_on')
         context['number_of_comments'] = Comment.objects.filter(user=self.object.pk).count()
         return context
 

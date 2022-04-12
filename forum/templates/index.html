@@ -128,9 +128,15 @@
                                     Members
                                 </div>
                                 <div class="col-sm-6 flex-ew text-center py-3 mx-0">
-                                    <a class="d-block lead font-weight-bold text-primary" href="{% url 'profile' latest_user.pk %}">
-                                        {{ latest_user }}
+                                    {% if not latest_user == 'None' %}
+                                        <a class="d-block lead font-weight-bold text-primary" href="{% url 'profile' latest_user.pk %}">
+                                            {{ latest_user }}
+                                        </a>
+                                    {% else %}
+                                        <a class="d-block lead font-weight-bold text-primary" href="#">
+                                            {{ latest_user }}
                                     </a>
+                                    {% endif %}
                                     Newest Member
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 # Python Web Framework final project
  
-<h1>functionality</h1>
+<h1>Functionality</h1>
 <ul>
  <li>
      Login/Register

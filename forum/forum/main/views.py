@@ -17,7 +17,7 @@ UserModel = get_user_model()
 
 
 class HomeView(ListView):
-    template_name = 'index.html'
+    template_name = 'main/index.html'
     model = Post
     paginate_by = 5
     context_object_name = 'posts'
@@ -41,7 +41,7 @@ class HomeView(ListView):
 
 
 class CategoryView(ListView):
-    template_name = 'category.html'
+    template_name = 'main/category.html'
     model = Post
     paginate_by = 5
     context_object_name = 'posts'
@@ -72,7 +72,7 @@ class CategoryView(ListView):
 
 
 class TagView(ListView):
-    template_name = 'tag.html'
+    template_name = 'main/tag.html'
     model = Post
     paginate_by = 5
     context_object_name = 'posts'
@@ -103,7 +103,7 @@ class TagView(ListView):
 
 
 class CreatePostView(LoginRequiredMixin, CreateView):
-    template_name = 'create_post.html'
+    template_name = 'post/create_post.html'
     form_class = CreatePostForm
     success_url = reverse_lazy('index')
 
@@ -116,13 +116,13 @@ class CreatePostView(LoginRequiredMixin, CreateView):
 
 class EditPostView(RedirectToPreviousMixin, RedirectIfNotPostOwnerMixin, LoginRequiredMixin, UpdateView):
     model = Post
-    template_name = 'edit_post.html'
+    template_name = 'post/edit_post.html'
     form_class = EditPostForm
 
 
 class DeletePostView(RedirectIfNotPostOwnerMixin, LoginRequiredMixin, DeletionMixin, UpdateView):
     model = Post
-    template_name = 'delete_post.html'
+    template_name = 'post/delete_post.html'
     success_url = reverse_lazy('index')
     form_class = DeletePostForm
 
@@ -141,7 +141,7 @@ def like_post(request, pk):
 class PostDetailsView(HitCountDetailView):
     model = Post
     count_hit = True
-    template_name = 'details_post.html'
+    template_name = 'post/details_post.html'
     context_object_name = 'post'
 
     # check if the post exists before loading the page
@@ -178,7 +178,7 @@ class PostDetailsView(HitCountDetailView):
 
 
 class CreateCommentView(RedirectToPreviousMixin, LoginRequiredMixin, CreateView):
-    template_name = 'create_comment.html'
+    template_name = 'comment/create_comment.html'
     form_class = CreateCommentForm
 
     # check if the post exists and it's not closed before loading the page
@@ -199,13 +199,13 @@ class CreateCommentView(RedirectToPreviousMixin, LoginRequiredMixin, CreateView)
 
 class EditCommentView(RedirectToPreviousMixin, RedirectIfNotCommentOwnerMixin, LoginRequiredMixin, UpdateView):
     model = Comment
-    template_name = 'edit_comment.html'
+    template_name = 'comment/edit_comment.html'
     form_class = EditCommentForm
 
 
 class DeleteCommentView(RedirectToPreviousMixin, RedirectIfNotCommentOwnerMixin, LoginRequiredMixin, DeletionMixin, UpdateView):
     model = Comment
-    template_name = 'delete_comment.html'
+    template_name = 'comment/delete_comment.html'
     form_class = DeleteCommentForm
 
 
@@ -221,4 +221,4 @@ def like_comment(request, pk):
 
 
 def search_result(request):
-    return render(request, 'search.html')
+    return render(request, 'main/search.html')

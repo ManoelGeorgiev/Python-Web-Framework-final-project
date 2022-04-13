@@ -11,7 +11,7 @@ from forum.main.models import Post, Comment
 
 
 class LogInView(RedirectIfLoggedMixin, LoginView):
-    template_name = 'login_page.html'
+    template_name = 'account/login_page.html'
     form_class = LoginForm
     success_url = reverse_lazy('index')
 
@@ -27,13 +27,13 @@ class LogOutView(LogoutView):
 
 class RegisterView(RedirectIfLoggedMixin, CreateView):
     form_class = RegisterForm
-    template_name = 'register_page.html'
+    template_name = 'account/register_page.html'
     success_url = reverse_lazy('index')
 
 
 class ProfileView(DetailView):
     model = ForumUser
-    template_name = 'profile_page.html'
+    template_name = 'account/profile_page.html'
     context_object_name = 'user'
 
     def get_queryset(self):
@@ -49,7 +49,7 @@ class ProfileView(DetailView):
 
 class EditProfileView(RedirectIfNotProfileOwnerMixin, RedirectToPreviousMixin, LoginRequiredMixin, UpdateView):
     model = Profile
-    template_name = 'edit_profile.html'
+    template_name = 'account/edit_profile.html'
     form_class = EditProfileForm
 
 
@@ -58,4 +58,4 @@ class DeleteProfileView(RedirectIfNotProfileOwnerMixin, LoginRequiredMixin, Upda
     success_url = reverse_lazy('index')
     form_class = DeleteProfileForm
     context_object_name = 'profile'
-    template_name = 'delete_profile.html'
+    template_name = 'account/delete_profile.html'

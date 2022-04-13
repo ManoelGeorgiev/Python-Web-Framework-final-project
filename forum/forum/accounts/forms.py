@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from forum.accounts.models import Profile
 from forum.common.helpers import BootstrapMixin
-from forum.common.validators import validate_image_max_size_when_registering
+from forum.common.validators import validate_image_max_size_when_registering, validate_only_letters
 
 UserModel = get_user_model()
 
@@ -47,10 +47,16 @@ class RegisterForm(BootstrapMixin, UserCreationForm):
 
     first_name = forms.CharField(
         max_length=Profile.FIRST_NAME_MAX_LENGTH,
+        validators=(
+            validate_only_letters,
+        )
     )
 
     last_name = forms.CharField(
-        max_length=Profile.LAST_NAME_MAX_LENGTH
+        max_length=Profile.LAST_NAME_MAX_LENGTH,
+        validators=(
+            validate_only_letters,
+        )
     )
 
     email = forms.EmailField()

@@ -4,8 +4,9 @@ from django.core.exceptions import ValidationError
 
 
 def validate_only_letters(value):
-    if not value.isalpha():
-        return ValidationError('The name should contain only letters.')
+    for ch in value:
+        if not ch.isalpha():
+            raise ValidationError('The name should contain only letters.')
 
 
 def validate_image_max_size(value):

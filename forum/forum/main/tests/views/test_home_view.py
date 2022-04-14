@@ -1,15 +1,8 @@
 import os
-import tempfile
 from datetime import date
-from io import BytesIO
-
-from PIL import Image
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
-from django.core.files import File
 from django.test import TestCase
 from django.urls import reverse
-
 from forum import settings
 from forum.accounts.models import Profile
 from forum.main.models import Category, Tag, Post
@@ -80,7 +73,7 @@ class HomeViewTests(TestCase):
         response = self.client.get(reverse('index'))
         self.assertEqual('None', response.context['latest_user'])
 
-    def test_get_latest_user__when_we_have_users__exprect_user_success(self):
+    def test_get_latest_user__when_we_have_users__exprect_user_name(self):
         user = UserModel.objects.create_user(**self.VALID_USER_DATA)
         response = self.client.get(reverse('index'))
         self.assertEqual(user, response.context['latest_user'])

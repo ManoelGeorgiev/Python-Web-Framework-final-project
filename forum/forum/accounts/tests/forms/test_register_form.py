@@ -12,7 +12,7 @@ from forum.accounts.models import Profile
 UserModel = get_user_model()
 
 
-class ProfileTests(TestCase):
+class RegisterFormTest(TestCase):
 
     @staticmethod
     def get_image_file(name='test.png', ext='png', size=(50, 50), color=(256, 0, 0)):

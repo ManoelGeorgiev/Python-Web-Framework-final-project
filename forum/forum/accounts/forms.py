@@ -120,9 +120,7 @@ class EditProfileForm(BootstrapMixin, forms.ModelForm):
 
     # checks if there is new picture and deletes the old one
     def save(self, commit=True):
-        past_photo_name = self.initial['picture'].name
-        new_photo_name = self.cleaned_data['picture'].name
-        if not past_photo_name == new_photo_name:
+        if 'picture' in self.changed_data:
             os.remove(self.initial['picture'].path)
         self.instance.save()
         return self.instance

@@ -73,5 +73,5 @@ class DeletePostViewTests(TestCase):
 
     def test_get__when_not_logged__expect_redirect(self):
         user, profile, category, tag, post = self.__create_valid_user_category_tag_post()
-        response = self.client.get(reverse('delete post', args=[1]))
+        response = self.client.get(reverse('delete post', args=[post.pk]))
         self.assertEqual(response.status_code, 302)

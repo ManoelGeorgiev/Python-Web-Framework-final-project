@@ -9,16 +9,16 @@ from forum.main.models import Category, Tag, Post
 
 UserModel = get_user_model()
 
-class EditPostViewTests(TestCase):
 
+class EditPostViewTests(TestCase):
     VALID_USER_DATA = {
         'username': 'manoel',
         'password': '8!576Hh_kd',
     }
 
     VALID_USER1_DATA = {
-        'username': 'manoel1',
-        'password': '8!576Hh_kd',
+        'username': 'manol',
+        'password': '!586Hh_kd',
     }
 
     VALID_PROFILE_DATA = {
@@ -33,9 +33,16 @@ class EditPostViewTests(TestCase):
     VALID_CATEGORY_DATA = {
         'title': 'Python',
     }
+    VALID_CATEGORY_DATA1 = {
+        'title': 'Java',
+    }
 
     VALID_TAG_DATA = {
         'name': 'function'
+    }
+
+    VALID_TAG_DATA1 = {
+        'name': 'app'
     }
 
     VALID_POST_DATA = {
@@ -48,7 +55,7 @@ class EditPostViewTests(TestCase):
         profile = Profile.objects.create(**self.VALID_PROFILE_DATA, user=user)
         category = Category.objects.create(**self.VALID_CATEGORY_DATA)
         tag = Tag.objects.create(**self.VALID_TAG_DATA)
-        post = Post.objects.create(**self.VALID_POST_DATA,category_id=category.id, user=user)
+        post = Post.objects.create(**self.VALID_POST_DATA, category_id=category.id, user=user)
         post.tag.add(tag)
         return (user, profile, category, tag, post)
 
@@ -70,3 +77,26 @@ class EditPostViewTests(TestCase):
         self.client.force_login(user=user)
         response = self.client.get(reverse('edit post', args=[1]))
         self.assertEqual(response.status_code, 404)
+
+    def test_edit_post__with_valid_data__expect_success(self):
+        user, profile, category, tag, post = self.__create_valid_user_category_tag_post()
+        category2 = Category.objects.create(**self.VALID_CATEGORY_DATA1)
+        tag2 = Tag.objects.create(**self.VALID_TAG_DATA1)
+        VALID_POST_DATA_EDIT = {
+            'title': 'new title',
+            'content': 'new content',
+            'category': category2.pk,
+            'tag': [tag.pk, tag2.pk],
+        }
+        self.client.force_login(user)
+        s = self.client.session
+        s.update(
+            {'previous_page': reverse('post details', args=[post.pk])},
+        )
+        s.save()
+        response = self.client.post(reverse('edit post', args=[post.pk]), VALID_POST_DATA_EDIT)
+        post1 = Post.objects.first()
+        self.assertEqual(post1.title, VALID_POST_DATA_EDIT['title'])
+        self.assertEqual(post1.content, VALID_POST_DATA_EDIT['content'])
+        self.assertEqual(post1.category.pk, VALID_POST_DATA_EDIT['category'])
+        self.assertEqual(post1.tag.count(), 2)

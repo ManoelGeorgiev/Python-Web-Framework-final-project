@@ -47,12 +47,6 @@ class CategoryView(ListView):
     context_object_name = 'posts'
     ordering = ['-created_on']
 
-    # check if category exist before loading the page
-    def dispatch(self, request, *args, **kwargs):
-        category_pk = self.kwargs['pk']
-        category = get_object_or_404(Category, pk=category_pk)
-        return super().dispatch(request, *args, **kwargs)
-
     # prefetch the like and comment sets
     def get_queryset(self):
         queryset = super().get_queryset().filter(category_id=self.kwargs['pk']) \
@@ -61,7 +55,7 @@ class CategoryView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['category'] = Category.objects.get(pk=self.kwargs['pk'])
+        context['category'] = get_object_or_404(Category, pk=self.kwargs['pk'])
         context['users_count'] = UserModel.objects.all().count()
         context['posts_count'] = Post.objects.filter(category_id=self.kwargs['pk']).count()
         try:
@@ -78,12 +72,6 @@ class TagView(ListView):
     context_object_name = 'posts'
     ordering = ['-created_on']
 
-    # check if category exist before loading the page
-    def dispatch(self, request, *args, **kwargs):
-        tag_pk = self.kwargs['pk']
-        tag = get_object_or_404(Tag, pk=tag_pk)
-        return super().dispatch(request, *args, **kwargs)
-
     # prefetch the like and comment sets
     def get_queryset(self):
         queryset = super().get_queryset().filter(tag=self.kwargs['pk'])\
@@ -92,7 +80,7 @@ class TagView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tag'] = Tag.objects.get(pk=self.kwargs['pk'])
+        context['tag'] = get_object_or_404(Tag, pk=self.kwargs['pk'])
         context['users_count'] = UserModel.objects.all().count()
         context['posts_count'] = Post.objects.filter(tag=self.kwargs['pk']).count()
         try:

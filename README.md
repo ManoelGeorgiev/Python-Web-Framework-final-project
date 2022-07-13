@@ -1,5 +1,3 @@
-# Python Web Framework final project
- 
 <h1>Functionality</h1>
 <ul>
  <li>
